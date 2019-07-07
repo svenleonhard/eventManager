@@ -12,14 +12,14 @@ description String,
 manufactor String
 }
 
-entity BoxItem{
+entity Boxitem{
 toRepair Boolean,
 comment String
 }
 
 relationship ManyToOne {
-	BoxItem{box} to Box,
-    BoxItem{item} to Item
+	Boxitem{box(name)} to Box,
+    Boxitem{item(name)} to Item
 }
 
-paginate Box, Item, BoxItem with infinite-scroll
+paginate Box, Item, Boxitem with infinite-scroll

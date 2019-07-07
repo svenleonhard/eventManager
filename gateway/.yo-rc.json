@@ -1,14 +1,14 @@
 {
   "generator-jhipster": {
     "promptValues": {
-      "packageName": "de.sevenlevent.eventmanager.gateway",
+      "packageName": "de.sevenldev.eventmanager.gateway",
       "nativeLanguage": "en"
     },
     "jhipsterVersion": "6.1.2",
     "applicationType": "gateway",
     "baseName": "gateway",
-    "packageName": "de.sevenlevent.eventmanager.gateway",
-    "packageFolder": "de/sevenlevent/eventmanager/gateway",
+    "packageName": "de.sevenldev.eventmanager.gateway",
+    "packageFolder": "de/sevenldev/eventmanager/gateway",
     "serverPort": "8080",
     "authenticationType": "jwt",
     "cacheProvider": "hazelcast",
@@ -17,12 +17,12 @@
     "databaseType": "sql",
     "devDatabaseType": "h2Disk",
     "prodDatabaseType": "mysql",
-    "searchEngine": "elasticsearch",
+    "searchEngine": false,
     "messageBroker": false,
     "serviceDiscoveryType": "eureka",
     "buildTool": "maven",
     "enableSwaggerCodegen": false,
-    "jwtSecretKey": "MDAzNjE5N2E2MTZlYTMzNmFjMzJmNTc3MzIyYjI3MjlmOGYyZTUzZGFiN2UxMTMzOWVjYWUxMDRhOGJmMmM2ZTNmNTQyY2U4ZTM1ZWY0Y2E3ZTY3MzMwY2M4YTNiNjMzM2ZjNDc2ZGNkMDQzNzY0ODg3ZjU2NjA4MWE4ZDQ2YTQ=",
+    "jwtSecretKey": "Njg0MDAxNjQ1OGRjNjRkOTY5ODY5MWYwYjM5NjM3MzU5OTVlNGM3MWQ4YTA0Mzc5ZDAwNGI4MWI5MWVkYzBhMWVjYzUwZDEwMGRhODU1ZDkyNGY2YjczNTU1ZTI5OGVkNzUxOTQwNTA1ZWViZjZjNmU3MTM1M2Q4MzVkZDUyZDM=",
     "useSass": true,
     "clientPackageManager": "npm",
     "clientFramework": "angularX",

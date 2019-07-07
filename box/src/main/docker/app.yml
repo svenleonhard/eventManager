@@ -11,16 +11,10 @@ services:
       - SPRING_DATA_MONGODB_URI=mongodb://box-mongodb:27017
       - SPRING_DATA_MONGODB_DATABASE=box
       - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
-      - SPRING_DATA_JEST_URI=http://box-elasticsearch:9200
-      - SPRING_ELASTICSEARCH_REST_URIS=http://box-elasticsearch:9200
   box-mongodb:
     extends:
       file: mongodb.yml
       service: box-mongodb
-  box-elasticsearch:
-    extends:
-      file: elasticsearch.yml
-      service: box-elasticsearch
   jhipster-registry:
     extends:
       file: jhipster-registry.yml

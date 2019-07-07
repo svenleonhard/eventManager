@@ -1,14 +1,14 @@
 {
   "generator-jhipster": {
     "promptValues": {
-      "packageName": "de.sevenlevent.eventmanager.box",
+      "packageName": "de.sevenldev.eventmanager.box",
       "nativeLanguage": "en"
     },
     "jhipsterVersion": "6.1.2",
     "applicationType": "microservice",
     "baseName": "box",
-    "packageName": "de.sevenlevent.eventmanager.box",
-    "packageFolder": "de/sevenlevent/eventmanager/box",
+    "packageName": "de.sevenldev.eventmanager.box",
+    "packageFolder": "de/sevenldev/eventmanager/box",
     "serverPort": "8081",
     "authenticationType": "jwt",
     "cacheProvider": "hazelcast",
@@ -17,14 +17,13 @@
     "databaseType": "mongodb",
     "devDatabaseType": "mongodb",
     "prodDatabaseType": "mongodb",
-    "searchEngine": "elasticsearch",
+    "searchEngine": false,
     "messageBroker": false,
     "serviceDiscoveryType": "eureka",
     "buildTool": "maven",
     "enableSwaggerCodegen": false,
-    "jwtSecretKey": "YmEwZmI5ZWUyZjRmMjZmZDJjZDkyZGY0OTQyODY1MTkyNGU4ZTdkZGNhMGYxNzAyYTY2YWIwODg3ZDY3MWQ0MDVhYWRkNTk4MTM3MjliOTQzMDdjYmJlMDlkMTNkZmIyZWFkYmFjZjY3OThhYmY3MGVlMTcxN2I0MTIyZDkyOTU=",
+    "jwtSecretKey": "ZmJmZjAxOTMyOGE2Yzk5ZTI4N2FjNGVjMjQzYTc3YmIwMzM0YjU0NWE3MzNmYjBlNjllNDY3MzFlM2JlY2UxOTA3MmM4OTU5OGIyNjY4YTA4N2QyYzg1MDhjYTNiOGI3Nzc5ZmJhYjExMWI1MzlhZWFhNjk4NzNlOTZkZjdkYjQ=",
     "testFrameworks": [
-      "gatling",
       "cucumber"
     ],
     "jhiPrefix": "jhi",

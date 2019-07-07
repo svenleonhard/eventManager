@@ -28,10 +28,6 @@ spring:
       host: localhost
       port: 0
       database: box
-    elasticsearch:
-      properties:
-        path:
-          home: target/elasticsearch
   mail:
     host: localhost
   main:
@@ -81,7 +77,7 @@ jhipster:
     authentication:
       jwt:
         # This token must be encoded using Base64 (you can type `echo 'secret-key'|base64` on your command line)
-        base64-secret: YmEwZmI5ZWUyZjRmMjZmZDJjZDkyZGY0OTQyODY1MTkyNGU4ZTdkZGNhMGYxNzAyYTY2YWIwODg3ZDY3MWQ0MDVhYWRkNTk4MTM3MjliOTQzMDdjYmJlMDlkMTNkZmIyZWFkYmFjZjY3OThhYmY3MGVlMTcxN2I0MTIyZDkyOTU=
+        base64-secret: ZmJmZjAxOTMyOGE2Yzk5ZTI4N2FjNGVjMjQzYTc3YmIwMzM0YjU0NWE3MzNmYjBlNjllNDY3MzFlM2JlY2UxOTA3MmM4OTU5OGIyNjY4YTA4N2QyYzg1MDhjYTNiOGI3Nzc5ZmJhYjExMWI1MzlhZWFhNjk4NzNlOTZkZjdkYjQ=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
   metrics:
