@@ -1,0 +1,29 @@
+entity Box{
+extenedId String,
+name String required minlength(3),
+category String,
+description String
+}
+
+entity Item{
+name String required minlength(3),
+category String,
+description String,
+manufactor String
+}
+
+entity BoxItem{
+toRepair Boolean,
+comment String
+}
+
+relationship ManyToOne {
+	BoxItem{box} to Box,
+    BoxItem{item} to Item
+}
+
+relationship ManyToMany {
+	Box{user} to User{box}
+}
+
+paginate Box, Item, BoxItem with infinite-scroll

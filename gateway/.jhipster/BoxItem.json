@@ -1,0 +1,38 @@
+{
+    "name": "BoxItem",
+    "fields": [
+        {
+            "fieldName": "toRepair",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "comment",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "box",
+            "otherEntityRelationshipName": "boxItem",
+            "relationshipName": "box",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "item",
+            "otherEntityRelationshipName": "boxItem",
+            "relationshipName": "item",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190707112831",
+    "entityTableName": "box_item",
+    "dto": "no",
+    "pagination": "infinite-scroll",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}
