@@ -1,0 +1,43 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "de.sevenldev.eventmanager.box",
+      "nativeLanguage": "en"
+    },
+    "jhipsterVersion": "6.1.2",
+    "applicationType": "microservice",
+    "baseName": "box",
+    "packageName": "de.sevenldev.eventmanager.box",
+    "packageFolder": "de/sevenldev/eventmanager/box",
+    "serverPort": "8081",
+    "authenticationType": "jwt",
+    "cacheProvider": "hazelcast",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Disk",
+    "prodDatabaseType": "mysql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": "eureka",
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "MzAxYTk4ZDkwNTNiMWQ2ZGVjYjhkZGJkOWFmZDNiYWQ0NzJmNjBkYWVjZjhlNDgyOTgxZmMyNzRjOGFhYzU2M2VmOGU0MWZmNGVhMjM4MjQ5MDcyNWZmMDExYzQ2YjE4MThmMWMwZThjOTNmMGQyMTQ0ODczYjI4OGQwYmNkMDI=",
+    "testFrameworks": [
+      "cucumber"
+    ],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": true,
+    "clientPackageManager": "npm",
+    "nativeLanguage": "en",
+    "languages": [
+      "en",
+      "de"
+    ],
+    "skipClient": true,
+    "skipUserManagement": true
+  }
+}
