@@ -1,14 +1,14 @@
 {
   "generator-jhipster": {
     "promptValues": {
-      "packageName": "de.sevenldev.eventmanager.gateway",
+      "packageName": "de.sevenlevent.eventmanager.gateway",
       "nativeLanguage": "en"
     },
     "jhipsterVersion": "6.1.2",
     "applicationType": "gateway",
     "baseName": "gateway",
-    "packageName": "de.sevenldev.eventmanager.gateway",
-    "packageFolder": "de/sevenldev/eventmanager/gateway",
+    "packageName": "de.sevenlevent.eventmanager.gateway",
+    "packageFolder": "de/sevenlevent/eventmanager/gateway",
     "serverPort": "8080",
     "authenticationType": "jwt",
     "cacheProvider": "hazelcast",
@@ -22,19 +22,24 @@
     "serviceDiscoveryType": "eureka",
     "buildTool": "maven",
     "enableSwaggerCodegen": false,
-    "jwtSecretKey": "MjUwMmVmMWVjNjEzZTFkMjg5MzRjM2Y4OTNjNGJkZGI0MDllYmJiNTEyZTMzZmU1NzkwOTg2Y2YyYTE0NWY1MWE4OTA5MWZkNmU0NTUzYTA4ZjNmYjMyOGZjZGI3ZTM1MjJhMzY3MmJmZDQ3MTg5Y2NjZDY1MjAwMGViY2NhMzU=",
+    "jwtSecretKey": "MDAzNjE5N2E2MTZlYTMzNmFjMzJmNTc3MzIyYjI3MjlmOGYyZTUzZGFiN2UxMTMzOWVjYWUxMDRhOGJmMmM2ZTNmNTQyY2U4ZTM1ZWY0Y2E3ZTY3MzMwY2M4YTNiNjMzM2ZjNDc2ZGNkMDQzNzY0ODg3ZjU2NjA4MWE4ZDQ2YTQ=",
     "useSass": true,
     "clientPackageManager": "npm",
     "clientFramework": "angularX",
     "clientTheme": "flatly",
     "clientThemeVariant": "light",
-    "testFrameworks": ["cucumber"],
+    "testFrameworks": [
+      "cucumber"
+    ],
     "jhiPrefix": "jhi",
     "entitySuffix": "",
     "dtoSuffix": "DTO",
     "otherModules": [],
     "enableTranslation": true,
     "nativeLanguage": "en",
-    "languages": ["en"]
+    "languages": [
+      "en",
+      "de"
+    ]
   }
 }

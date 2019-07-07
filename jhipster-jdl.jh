@@ -22,8 +22,4 @@ relationship ManyToOne {
     BoxItem{item} to Item
 }
 
-relationship ManyToMany {
-	Box{user} to User{box}
-}
-
 paginate Box, Item, BoxItem with infinite-scroll

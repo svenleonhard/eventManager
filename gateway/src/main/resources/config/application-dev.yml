@@ -17,7 +17,7 @@ logging:
   level:
     ROOT: DEBUG
     io.github.jhipster: DEBUG
-    de.sevenldev.eventmanager.gateway: DEBUG
+    de.sevenlevent.eventmanager.gateway: DEBUG
 
 eureka:
   instance:
@@ -136,7 +136,7 @@ jhipster:
     authentication:
       jwt:
         # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
-        base64-secret: MjUwMmVmMWVjNjEzZTFkMjg5MzRjM2Y4OTNjNGJkZGI0MDllYmJiNTEyZTMzZmU1NzkwOTg2Y2YyYTE0NWY1MWE4OTA5MWZkNmU0NTUzYTA4ZjNmYjMyOGZjZGI3ZTM1MjJhMzY3MmJmZDQ3MTg5Y2NjZDY1MjAwMGViY2NhMzU=
+        base64-secret: MDAzNjE5N2E2MTZlYTMzNmFjMzJmNTc3MzIyYjI3MjlmOGYyZTUzZGFiN2UxMTMzOWVjYWUxMDRhOGJmMmM2ZTNmNTQyY2U4ZTM1ZWY0Y2E3ZTY3MzMwY2M4YTNiNjMzM2ZjNDc2ZGNkMDQzNzY0ODg3ZjU2NjA4MWE4ZDQ2YTQ=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000
