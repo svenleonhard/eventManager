@@ -1,0 +1,307 @@
+package de.sevenldev.eventmanager.box.web.rest;
+
+import de.sevenldev.eventmanager.box.BoxApp;
+import de.sevenldev.eventmanager.box.domain.Boxitem;
+import de.sevenldev.eventmanager.box.repository.BoxitemRepository;
+import de.sevenldev.eventmanager.box.repository.search.BoxitemSearchRepository;
+import de.sevenldev.eventmanager.box.web.rest.errors.ExceptionTranslator;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Validator;
+
+import javax.persistence.EntityManager;
+import java.util.Collections;
+import java.util.List;
+
+import static de.sevenldev.eventmanager.box.web.rest.TestUtil.createFormattingConversionService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+/**
+ * Integration tests for the {@Link BoxitemResource} REST controller.
+ */
+@SpringBootTest(classes = BoxApp.class)
+public class BoxitemResourceIT {
+
+    private static final Boolean DEFAULT_TO_REPAIR = false;
+    private static final Boolean UPDATED_TO_REPAIR = true;
+
+    private static final String DEFAULT_COMMENT = "AAAAAAAAAA";
+    private static final String UPDATED_COMMENT = "BBBBBBBBBB";
+
+    @Autowired
+    private BoxitemRepository boxitemRepository;
+
+    /**
+     * This repository is mocked in the de.sevenldev.eventmanager.box.repository.search test package.
+     *
+     * @see de.sevenldev.eventmanager.box.repository.search.BoxitemSearchRepositoryMockConfiguration
+     */
+    @Autowired
+    private BoxitemSearchRepository mockBoxitemSearchRepository;
+
+    @Autowired
+    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+
+    @Autowired
+    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
+    private EntityManager em;
+
+    @Autowired
+    private Validator validator;
+
+    private MockMvc restBoxitemMockMvc;
+
+    private Boxitem boxitem;
+
+    @BeforeEach
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        final BoxitemResource boxitemResource = new BoxitemResource(boxitemRepository, mockBoxitemSearchRepository);
+        this.restBoxitemMockMvc = MockMvcBuilders.standaloneSetup(boxitemResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
+            .setMessageConverters(jacksonMessageConverter)
+            .setValidator(validator).build();
+    }
+
+    /**
+     * Create an entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static Boxitem createEntity(EntityManager em) {
+        Boxitem boxitem = new Boxitem()
+            .toRepair(DEFAULT_TO_REPAIR)
+            .comment(DEFAULT_COMMENT);
+        return boxitem;
+    }
+    /**
+     * Create an updated entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static Boxitem createUpdatedEntity(EntityManager em) {
+        Boxitem boxitem = new Boxitem()
+            .toRepair(UPDATED_TO_REPAIR)
+            .comment(UPDATED_COMMENT);
+        return boxitem;
+    }
+
+    @BeforeEach
+    public void initTest() {
+        boxitem = createEntity(em);
+    }
+
+    @Test
+    @Transactional
+    public void createBoxitem() throws Exception {
+        int databaseSizeBeforeCreate = boxitemRepository.findAll().size();
+
+        // Create the Boxitem
+        restBoxitemMockMvc.perform(post("/api/boxitems")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(boxitem)))
+            .andExpect(status().isCreated());
+
+        // Validate the Boxitem in the database
+        List<Boxitem> boxitemList = boxitemRepository.findAll();
+        assertThat(boxitemList).hasSize(databaseSizeBeforeCreate + 1);
+        Boxitem testBoxitem = boxitemList.get(boxitemList.size() - 1);
+        assertThat(testBoxitem.isToRepair()).isEqualTo(DEFAULT_TO_REPAIR);
+        assertThat(testBoxitem.getComment()).isEqualTo(DEFAULT_COMMENT);
+
+        // Validate the Boxitem in Elasticsearch
+        verify(mockBoxitemSearchRepository, times(1)).save(testBoxitem);
+    }
+
+    @Test
+    @Transactional
+    public void createBoxitemWithExistingId() throws Exception {
+        int databaseSizeBeforeCreate = boxitemRepository.findAll().size();
+
+        // Create the Boxitem with an existing ID
+        boxitem.setId(1L);
+
+        // An entity with an existing ID cannot be created, so this API call must fail
+        restBoxitemMockMvc.perform(post("/api/boxitems")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(boxitem)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Boxitem in the database
+        List<Boxitem> boxitemList = boxitemRepository.findAll();
+        assertThat(boxitemList).hasSize(databaseSizeBeforeCreate);
+
+        // Validate the Boxitem in Elasticsearch
+        verify(mockBoxitemSearchRepository, times(0)).save(boxitem);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllBoxitems() throws Exception {
+        // Initialize the database
+        boxitemRepository.saveAndFlush(boxitem);
+
+        // Get all the boxitemList
+        restBoxitemMockMvc.perform(get("/api/boxitems?sort=id,desc"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(boxitem.getId().intValue())))
+            .andExpect(jsonPath("$.[*].toRepair").value(hasItem(DEFAULT_TO_REPAIR.booleanValue())))
+            .andExpect(jsonPath("$.[*].comment").value(hasItem(DEFAULT_COMMENT.toString())));
+    }
+    
+    @Test
+    @Transactional
+    public void getBoxitem() throws Exception {
+        // Initialize the database
+        boxitemRepository.saveAndFlush(boxitem);
+
+        // Get the boxitem
+        restBoxitemMockMvc.perform(get("/api/boxitems/{id}", boxitem.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.id").value(boxitem.getId().intValue()))
+            .andExpect(jsonPath("$.toRepair").value(DEFAULT_TO_REPAIR.booleanValue()))
+            .andExpect(jsonPath("$.comment").value(DEFAULT_COMMENT.toString()));
+    }
+
+    @Test
+    @Transactional
+    public void getNonExistingBoxitem() throws Exception {
+        // Get the boxitem
+        restBoxitemMockMvc.perform(get("/api/boxitems/{id}", Long.MAX_VALUE))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Transactional
+    public void updateBoxitem() throws Exception {
+        // Initialize the database
+        boxitemRepository.saveAndFlush(boxitem);
+
+        int databaseSizeBeforeUpdate = boxitemRepository.findAll().size();
+
+        // Update the boxitem
+        Boxitem updatedBoxitem = boxitemRepository.findById(boxitem.getId()).get();
+        // Disconnect from session so that the updates on updatedBoxitem are not directly saved in db
+        em.detach(updatedBoxitem);
+        updatedBoxitem
+            .toRepair(UPDATED_TO_REPAIR)
+            .comment(UPDATED_COMMENT);
+
+        restBoxitemMockMvc.perform(put("/api/boxitems")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(updatedBoxitem)))
+            .andExpect(status().isOk());
+
+        // Validate the Boxitem in the database
+        List<Boxitem> boxitemList = boxitemRepository.findAll();
+        assertThat(boxitemList).hasSize(databaseSizeBeforeUpdate);
+        Boxitem testBoxitem = boxitemList.get(boxitemList.size() - 1);
+        assertThat(testBoxitem.isToRepair()).isEqualTo(UPDATED_TO_REPAIR);
+        assertThat(testBoxitem.getComment()).isEqualTo(UPDATED_COMMENT);
+
+        // Validate the Boxitem in Elasticsearch
+        verify(mockBoxitemSearchRepository, times(1)).save(testBoxitem);
+    }
+
+    @Test
+    @Transactional
+    public void updateNonExistingBoxitem() throws Exception {
+        int databaseSizeBeforeUpdate = boxitemRepository.findAll().size();
+
+        // Create the Boxitem
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restBoxitemMockMvc.perform(put("/api/boxitems")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(boxitem)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Boxitem in the database
+        List<Boxitem> boxitemList = boxitemRepository.findAll();
+        assertThat(boxitemList).hasSize(databaseSizeBeforeUpdate);
+
+        // Validate the Boxitem in Elasticsearch
+        verify(mockBoxitemSearchRepository, times(0)).save(boxitem);
+    }
+
+    @Test
+    @Transactional
+    public void deleteBoxitem() throws Exception {
+        // Initialize the database
+        boxitemRepository.saveAndFlush(boxitem);
+
+        int databaseSizeBeforeDelete = boxitemRepository.findAll().size();
+
+        // Delete the boxitem
+        restBoxitemMockMvc.perform(delete("/api/boxitems/{id}", boxitem.getId())
+            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .andExpect(status().isNoContent());
+
+        // Validate the database contains one less item
+        List<Boxitem> boxitemList = boxitemRepository.findAll();
+        assertThat(boxitemList).hasSize(databaseSizeBeforeDelete - 1);
+
+        // Validate the Boxitem in Elasticsearch
+        verify(mockBoxitemSearchRepository, times(1)).deleteById(boxitem.getId());
+    }
+
+    @Test
+    @Transactional
+    public void searchBoxitem() throws Exception {
+        // Initialize the database
+        boxitemRepository.saveAndFlush(boxitem);
+        when(mockBoxitemSearchRepository.search(queryStringQuery("id:" + boxitem.getId()), PageRequest.of(0, 20)))
+            .thenReturn(new PageImpl<>(Collections.singletonList(boxitem), PageRequest.of(0, 1), 1));
+        // Search the boxitem
+        restBoxitemMockMvc.perform(get("/api/_search/boxitems?query=id:" + boxitem.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(boxitem.getId().intValue())))
+            .andExpect(jsonPath("$.[*].toRepair").value(hasItem(DEFAULT_TO_REPAIR.booleanValue())))
+            .andExpect(jsonPath("$.[*].comment").value(hasItem(DEFAULT_COMMENT)));
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(Boxitem.class);
+        Boxitem boxitem1 = new Boxitem();
+        boxitem1.setId(1L);
+        Boxitem boxitem2 = new Boxitem();
+        boxitem2.setId(boxitem1.getId());
+        assertThat(boxitem1).isEqualTo(boxitem2);
+        boxitem2.setId(2L);
+        assertThat(boxitem1).isNotEqualTo(boxitem2);
+        boxitem1.setId(null);
+        assertThat(boxitem1).isNotEqualTo(boxitem2);
+    }
+}
