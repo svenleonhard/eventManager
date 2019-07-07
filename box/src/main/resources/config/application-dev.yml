@@ -36,15 +36,40 @@ spring:
   devtools:
     restart:
       enabled: true
+      additional-exclude: .h2.server.properties
     livereload:
       enabled: false # we use Webpack dev server + BrowserSync for livereload
   jackson:
     serialization:
       indent-output: true
-  data:
-    mongodb:
-      uri: mongodb://localhost:27017
-      database: box
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:h2:file:./target/h2db/db/box;DB_CLOSE_DELAY=-1
+    username: box
+    password:
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+  h2:
+    console:
+      enabled: false
+  jpa:
+    database-platform: io.github.jhipster.domain.util.FixedH2Dialect
+    database: H2
+    show-sql: true
+    properties:
+      hibernate.id.new_generator_mappings: true
+      hibernate.connection.provider_disables_autocommit: true
+      hibernate.cache.use_second_level_cache: true
+      hibernate.cache.use_query_cache: false
+      hibernate.generate_statistics: false
+      hibernate.cache.region.factory_class: com.hazelcast.hibernate.HazelcastCacheRegionFactory
+      hibernate.cache.hazelcast.instance_name: box
+      hibernate.cache.use_minimal_puts: true
+      hibernate.cache.hazelcast.use_lite_member: true
+  liquibase:
+    # Remove 'faker' if you do not want the sample data to be loaded automatically
+    contexts: dev, faker
   mail:
     host: localhost
     port: 25
@@ -95,7 +120,7 @@ jhipster:
     authentication:
       jwt:
         # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
-        base64-secret: ZmJmZjAxOTMyOGE2Yzk5ZTI4N2FjNGVjMjQzYTc3YmIwMzM0YjU0NWE3MzNmYjBlNjllNDY3MzFlM2JlY2UxOTA3MmM4OTU5OGIyNjY4YTA4N2QyYzg1MDhjYTNiOGI3Nzc5ZmJhYjExMWI1MzlhZWFhNjk4NzNlOTZkZjdkYjQ=
+        base64-secret: YTc4YTZiMDkyODc1ZmUzYjE2NDExNTgzYWYzZmI4ZGVlYzZiMjgwMjQ1NWRlNmRlNjU2OTBkNGI0MGJiMTIwMzhkNzM0MzhiMDUxNDgwNTkzZmMyMTVlMmJmNjY2M2Y3ZmE5OTJlMjBjM2FmNmJkMzcwZjRiMTk0YTEwYTAwMmE=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000

@@ -1,0 +1,29 @@
+{
+  "gatewayApp": {
+    "boxBox": {
+      "home": {
+        "title": "Boxes",
+        "createLabel": "Create a new Box",
+        "createOrEditLabel": "Create or edit a Box",
+        "notFound": "No Box found"
+      },
+      "delete": {
+        "question": "Are you sure you want to delete Box {{ id }}?"
+      },
+      "detail": {
+        "title": "Box"
+      },
+      "extenedId": "Extened Id",
+      "name": "Name",
+      "category": "Category",
+      "description": "Description"
+    }
+  },
+  "boxApp": {
+    "boxBox": {
+      "created": "A new Box is created with identifier {{ param }}",
+      "updated": "A Box is updated with identifier {{ param }}",
+      "deleted": "A Box is deleted with identifier {{ param }}"
+    }
+  }
+}

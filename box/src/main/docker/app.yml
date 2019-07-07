@@ -8,13 +8,12 @@ services:
       - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://admin:$${jhipster.registry.password}@jhipster-registry:8761/eureka
       - SPRING_CLOUD_CONFIG_URI=http://admin:$${jhipster.registry.password}@jhipster-registry:8761/config
-      - SPRING_DATA_MONGODB_URI=mongodb://box-mongodb:27017
-      - SPRING_DATA_MONGODB_DATABASE=box
+      - SPRING_DATASOURCE_URL=jdbc:mysql://box-mysql:3306/box?useUnicode=true&characterEncoding=utf8&useSSL=false
       - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
-  box-mongodb:
+  box-mysql:
     extends:
-      file: mongodb.yml
-      service: box-mongodb
+      file: mysql.yml
+      service: box-mysql
   jhipster-registry:
     extends:
       file: jhipster-registry.yml

@@ -2,7 +2,8 @@
   "generator-jhipster": {
     "promptValues": {
       "packageName": "de.sevenldev.eventmanager.gateway",
-      "nativeLanguage": "en"
+      "nativeLanguage": "en",
+      "microservicePath": "../box"
     },
     "jhipsterVersion": "6.1.2",
     "applicationType": "gateway",
@@ -28,18 +29,13 @@
     "clientFramework": "angularX",
     "clientTheme": "flatly",
     "clientThemeVariant": "light",
-    "testFrameworks": [
-      "cucumber"
-    ],
+    "testFrameworks": ["cucumber"],
     "jhiPrefix": "jhi",
     "entitySuffix": "",
     "dtoSuffix": "DTO",
     "otherModules": [],
     "enableTranslation": true,
     "nativeLanguage": "en",
-    "languages": [
-      "en",
-      "de"
-    ]
+    "languages": ["en", "de"]
   }
 }
