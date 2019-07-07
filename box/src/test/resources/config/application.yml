@@ -49,6 +49,11 @@ spring:
       hibernate.generate_statistics: false
       hibernate.hbm2ddl.auto: validate
       hibernate.jdbc.time_zone: UTC
+  data:
+    elasticsearch:
+      properties:
+        path:
+          home: target/elasticsearch
   liquibase:
     contexts: test
   mail:
@@ -100,7 +105,7 @@ jhipster:
     authentication:
       jwt:
         # This token must be encoded using Base64 (you can type `echo 'secret-key'|base64` on your command line)
-        base64-secret: YTc4YTZiMDkyODc1ZmUzYjE2NDExNTgzYWYzZmI4ZGVlYzZiMjgwMjQ1NWRlNmRlNjU2OTBkNGI0MGJiMTIwMzhkNzM0MzhiMDUxNDgwNTkzZmMyMTVlMmJmNjY2M2Y3ZmE5OTJlMjBjM2FmNmJkMzcwZjRiMTk0YTEwYTAwMmE=
+        base64-secret: OWZjYzI1YmJhYzFmY2JmODI1NDAwYTZkZTM1ZDA5MTdkNzJmNGE4ZmVlMzEyYjcwNGM0YjNmMDMyMGRmNTQ2MmI1YjJkOTM1OTk1MWQwNDdkMTk2YzMzNTIxMWRkOGVlYmQxMjk3OWZjOGQ5NmIyNWQzNjU4ZmUzYzkwYTBlOWU=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
   metrics:

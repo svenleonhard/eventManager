@@ -26,6 +26,11 @@ eureka:
     service-url:
       defaultZone: http://admin:${jhipster.registry.password}@localhost:8761/eureka/
 
+management:
+  health:
+    elasticsearch:
+      enabled: false
+
 spring:
   profiles:
     active: dev
@@ -67,6 +72,11 @@ spring:
       hibernate.cache.hazelcast.instance_name: gateway
       hibernate.cache.use_minimal_puts: true
       hibernate.cache.hazelcast.use_lite_member: true
+  data:
+    elasticsearch:
+      properties:
+        path:
+          home: target/elasticsearch
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
     contexts: dev, faker
@@ -126,7 +136,7 @@ jhipster:
     authentication:
       jwt:
         # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
-        base64-secret: Njg0MDAxNjQ1OGRjNjRkOTY5ODY5MWYwYjM5NjM3MzU5OTVlNGM3MWQ4YTA0Mzc5ZDAwNGI4MWI5MWVkYzBhMWVjYzUwZDEwMGRhODU1ZDkyNGY2YjczNTU1ZTI5OGVkNzUxOTQwNTA1ZWViZjZjNmU3MTM1M2Q4MzVkZDUyZDM=
+        base64-secret: ZDNjN2MyNjRlYjYxMjc3OTUwNzUxODBiYmY2ZjgxZjBlYmFmZGM1OGVhMzdjMDI0ZTlkYmM2MWVjZGI2ZjM4MTcwZWE1ZjdiZDFkZGY0N2U2OGZkOWM5ZGVmYTAxZmU5NzcxYjRhYzI4MWFkYWU1YzdmZmQ2MzcxNDZlMzU2ZmY=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000
