@@ -17,12 +17,12 @@
     "databaseType": "sql",
     "devDatabaseType": "h2Disk",
     "prodDatabaseType": "mysql",
-    "searchEngine": "elasticsearch",
+    "searchEngine": false,
     "messageBroker": false,
     "serviceDiscoveryType": "eureka",
     "buildTool": "maven",
     "enableSwaggerCodegen": false,
-    "jwtSecretKey": "OWZjYzI1YmJhYzFmY2JmODI1NDAwYTZkZTM1ZDA5MTdkNzJmNGE4ZmVlMzEyYjcwNGM0YjNmMDMyMGRmNTQ2MmI1YjJkOTM1OTk1MWQwNDdkMTk2YzMzNTIxMWRkOGVlYmQxMjk3OWZjOGQ5NmIyNWQzNjU4ZmUzYzkwYTBlOWU=",
+    "jwtSecretKey": "YTc4YTZiMDkyODc1ZmUzYjE2NDExNTgzYWYzZmI4ZGVlYzZiMjgwMjQ1NWRlNmRlNjU2OTBkNGI0MGJiMTIwMzhkNzM0MzhiMDUxNDgwNTkzZmMyMTVlMmJmNjY2M2Y3ZmE5OTJlMjBjM2FmNmJkMzcwZjRiMTk0YTEwYTAwMmE=",
     "testFrameworks": [
       "cucumber"
     ],

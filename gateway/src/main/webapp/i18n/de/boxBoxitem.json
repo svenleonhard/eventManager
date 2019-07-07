@@ -1,0 +1,29 @@
+{
+  "gatewayApp": {
+    "boxBoxitem": {
+      "home": {
+        "title": "Boxitems",
+        "createLabel": "Boxitem erstellen",
+        "createOrEditLabel": "Boxitem erstellen oder bearbeiten",
+        "notFound": "No Boxitem found"
+      },
+      "delete": {
+        "question": "Soll Boxitem {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Boxitem"
+      },
+      "toRepair": "To Repair",
+      "comment": "Comment",
+      "box": "Box",
+      "item": "Item"
+    }
+  },
+  "boxApp": {
+    "boxBoxitem": {
+      "created": "Boxitem erstellt mit ID {{ param }}",
+      "updated": "Boxitem aktualisiert mit ID {{ param }}",
+      "deleted": "Boxitem gelöscht mit ID {{ param }}"
+    }
+  }
+}

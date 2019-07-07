@@ -1,0 +1,43 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="boxitem">
+            <h2><span jhiTranslate="gatewayApp.boxBoxitem.detail.title">Boxitem</span> {{boxitem.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="gatewayApp.boxBoxitem.toRepair">To Repair</span></dt>
+                <dd>
+                    <span>{{boxitem.toRepair}}</span>
+                </dd>
+                <dt><span jhiTranslate="gatewayApp.boxBoxitem.comment">Comment</span></dt>
+                <dd>
+                    <span>{{boxitem.comment}}</span>
+                </dd>
+                <dt><span jhiTranslate="gatewayApp.boxBoxitem.box">Box</span></dt>
+                <dd>
+                    <div *ngIf="boxitem.box">
+                        <a [routerLink]="['/box', boxitem.box?.id, 'view']">{{boxitem.box?.name}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="gatewayApp.boxBoxitem.item">Item</span></dt>
+                <dd>
+                    <div *ngIf="boxitem.item">
+                        <a [routerLink]="['/item', boxitem.item?.id, 'view']">{{boxitem.item?.name}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/boxitem', boxitem.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

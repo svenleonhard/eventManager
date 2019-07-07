@@ -3,7 +3,6 @@ package de.sevenldev.eventmanager.box.web.rest;
 import de.sevenldev.eventmanager.box.BoxApp;
 import de.sevenldev.eventmanager.box.domain.Item;
 import de.sevenldev.eventmanager.box.repository.ItemRepository;
-import de.sevenldev.eventmanager.box.repository.search.ItemSearchRepository;
 import de.sevenldev.eventmanager.box.web.rest.errors.ExceptionTranslator;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -11,8 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -22,14 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
-import java.util.Collections;
 import java.util.List;
 
 import static de.sevenldev.eventmanager.box.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -54,14 +48,6 @@ public class ItemResourceIT {
     @Autowired
     private ItemRepository itemRepository;
 
-    /**
-     * This repository is mocked in the de.sevenldev.eventmanager.box.repository.search test package.
-     *
-     * @see de.sevenldev.eventmanager.box.repository.search.ItemSearchRepositoryMockConfiguration
-     */
-    @Autowired
-    private ItemSearchRepository mockItemSearchRepository;
-
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
@@ -84,7 +70,7 @@ public class ItemResourceIT {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final ItemResource itemResource = new ItemResource(itemRepository, mockItemSearchRepository);
+        final ItemResource itemResource = new ItemResource(itemRepository);
         this.restItemMockMvc = MockMvcBuilders.standaloneSetup(itemResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -146,9 +132,6 @@ public class ItemResourceIT {
         assertThat(testItem.getCategory()).isEqualTo(DEFAULT_CATEGORY);
         assertThat(testItem.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testItem.getManufactor()).isEqualTo(DEFAULT_MANUFACTOR);
-
-        // Validate the Item in Elasticsearch
-        verify(mockItemSearchRepository, times(1)).save(testItem);
     }
 
     @Test
@@ -168,9 +151,6 @@ public class ItemResourceIT {
         // Validate the Item in the database
         List<Item> itemList = itemRepository.findAll();
         assertThat(itemList).hasSize(databaseSizeBeforeCreate);
-
-        // Validate the Item in Elasticsearch
-        verify(mockItemSearchRepository, times(0)).save(item);
     }
 
 
@@ -265,9 +245,6 @@ public class ItemResourceIT {
         assertThat(testItem.getCategory()).isEqualTo(UPDATED_CATEGORY);
         assertThat(testItem.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testItem.getManufactor()).isEqualTo(UPDATED_MANUFACTOR);
-
-        // Validate the Item in Elasticsearch
-        verify(mockItemSearchRepository, times(1)).save(testItem);
     }
 
     @Test
@@ -286,9 +263,6 @@ public class ItemResourceIT {
         // Validate the Item in the database
         List<Item> itemList = itemRepository.findAll();
         assertThat(itemList).hasSize(databaseSizeBeforeUpdate);
-
-        // Validate the Item in Elasticsearch
-        verify(mockItemSearchRepository, times(0)).save(item);
     }
 
     @Test
@@ -307,27 +281,6 @@ public class ItemResourceIT {
         // Validate the database contains one less item
         List<Item> itemList = itemRepository.findAll();
         assertThat(itemList).hasSize(databaseSizeBeforeDelete - 1);
-
-        // Validate the Item in Elasticsearch
-        verify(mockItemSearchRepository, times(1)).deleteById(item.getId());
-    }
-
-    @Test
-    @Transactional
-    public void searchItem() throws Exception {
-        // Initialize the database
-        itemRepository.saveAndFlush(item);
-        when(mockItemSearchRepository.search(queryStringQuery("id:" + item.getId()), PageRequest.of(0, 20)))
-            .thenReturn(new PageImpl<>(Collections.singletonList(item), PageRequest.of(0, 1), 1));
-        // Search the item
-        restItemMockMvc.perform(get("/api/_search/items?query=id:" + item.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(item.getId().intValue())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].category").value(hasItem(DEFAULT_CATEGORY)))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
-            .andExpect(jsonPath("$.[*].manufactor").value(hasItem(DEFAULT_MANUFACTOR)));
     }
 
     @Test

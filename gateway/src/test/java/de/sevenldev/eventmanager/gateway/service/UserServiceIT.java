@@ -3,7 +3,6 @@ package de.sevenldev.eventmanager.gateway.service;
 import de.sevenldev.eventmanager.gateway.GatewayApp;
 import de.sevenldev.eventmanager.gateway.config.Constants;
 import de.sevenldev.eventmanager.gateway.domain.User;
-import de.sevenldev.eventmanager.gateway.repository.search.UserSearchRepository;
 import de.sevenldev.eventmanager.gateway.repository.UserRepository;
 import de.sevenldev.eventmanager.gateway.service.dto.UserDTO;
 import de.sevenldev.eventmanager.gateway.service.util.RandomUtil;
@@ -27,9 +26,6 @@ import java.util.Optional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -56,14 +52,6 @@ public class UserServiceIT {
 
     @Autowired
     private UserService userService;
-
-    /**
-     * This repository is mocked in the de.sevenldev.eventmanager.gateway.repository.search test package.
-     *
-     * @see de.sevenldev.eventmanager.gateway.repository.search.UserSearchRepositoryMockConfiguration
-     */
-    @Autowired
-    private UserSearchRepository mockUserSearchRepository;
 
     @Autowired
     private AuditingHandler auditingHandler;
@@ -178,9 +166,6 @@ public class UserServiceIT {
         userService.removeNotActivatedUsers();
         users = userRepository.findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(now.minus(3, ChronoUnit.DAYS));
         assertThat(users).isEmpty();
-
-        // Verify Elasticsearch mock
-        verify(mockUserSearchRepository, times(1)).delete(user);
     }
 
     @Test
@@ -197,9 +182,6 @@ public class UserServiceIT {
         userService.removeNotActivatedUsers();
         Optional<User> maybeDbUser = userRepository.findById(dbUser.getId());
         assertThat(maybeDbUser).contains(dbUser);
-
-        // Verify Elasticsearch mock
-        verify(mockUserSearchRepository, never()).delete(user);
     }
 
     @Test

@@ -3,7 +3,6 @@ package de.sevenldev.eventmanager.box.web.rest;
 import de.sevenldev.eventmanager.box.BoxApp;
 import de.sevenldev.eventmanager.box.domain.Boxitem;
 import de.sevenldev.eventmanager.box.repository.BoxitemRepository;
-import de.sevenldev.eventmanager.box.repository.search.BoxitemSearchRepository;
 import de.sevenldev.eventmanager.box.web.rest.errors.ExceptionTranslator;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -11,8 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -22,14 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
-import java.util.Collections;
 import java.util.List;
 
 import static de.sevenldev.eventmanager.box.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -47,14 +41,6 @@ public class BoxitemResourceIT {
 
     @Autowired
     private BoxitemRepository boxitemRepository;
-
-    /**
-     * This repository is mocked in the de.sevenldev.eventmanager.box.repository.search test package.
-     *
-     * @see de.sevenldev.eventmanager.box.repository.search.BoxitemSearchRepositoryMockConfiguration
-     */
-    @Autowired
-    private BoxitemSearchRepository mockBoxitemSearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -78,7 +64,7 @@ public class BoxitemResourceIT {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final BoxitemResource boxitemResource = new BoxitemResource(boxitemRepository, mockBoxitemSearchRepository);
+        final BoxitemResource boxitemResource = new BoxitemResource(boxitemRepository);
         this.restBoxitemMockMvc = MockMvcBuilders.standaloneSetup(boxitemResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -134,9 +120,6 @@ public class BoxitemResourceIT {
         Boxitem testBoxitem = boxitemList.get(boxitemList.size() - 1);
         assertThat(testBoxitem.isToRepair()).isEqualTo(DEFAULT_TO_REPAIR);
         assertThat(testBoxitem.getComment()).isEqualTo(DEFAULT_COMMENT);
-
-        // Validate the Boxitem in Elasticsearch
-        verify(mockBoxitemSearchRepository, times(1)).save(testBoxitem);
     }
 
     @Test
@@ -156,9 +139,6 @@ public class BoxitemResourceIT {
         // Validate the Boxitem in the database
         List<Boxitem> boxitemList = boxitemRepository.findAll();
         assertThat(boxitemList).hasSize(databaseSizeBeforeCreate);
-
-        // Validate the Boxitem in Elasticsearch
-        verify(mockBoxitemSearchRepository, times(0)).save(boxitem);
     }
 
 
@@ -227,9 +207,6 @@ public class BoxitemResourceIT {
         Boxitem testBoxitem = boxitemList.get(boxitemList.size() - 1);
         assertThat(testBoxitem.isToRepair()).isEqualTo(UPDATED_TO_REPAIR);
         assertThat(testBoxitem.getComment()).isEqualTo(UPDATED_COMMENT);
-
-        // Validate the Boxitem in Elasticsearch
-        verify(mockBoxitemSearchRepository, times(1)).save(testBoxitem);
     }
 
     @Test
@@ -248,9 +225,6 @@ public class BoxitemResourceIT {
         // Validate the Boxitem in the database
         List<Boxitem> boxitemList = boxitemRepository.findAll();
         assertThat(boxitemList).hasSize(databaseSizeBeforeUpdate);
-
-        // Validate the Boxitem in Elasticsearch
-        verify(mockBoxitemSearchRepository, times(0)).save(boxitem);
     }
 
     @Test
@@ -269,25 +243,6 @@ public class BoxitemResourceIT {
         // Validate the database contains one less item
         List<Boxitem> boxitemList = boxitemRepository.findAll();
         assertThat(boxitemList).hasSize(databaseSizeBeforeDelete - 1);
-
-        // Validate the Boxitem in Elasticsearch
-        verify(mockBoxitemSearchRepository, times(1)).deleteById(boxitem.getId());
-    }
-
-    @Test
-    @Transactional
-    public void searchBoxitem() throws Exception {
-        // Initialize the database
-        boxitemRepository.saveAndFlush(boxitem);
-        when(mockBoxitemSearchRepository.search(queryStringQuery("id:" + boxitem.getId()), PageRequest.of(0, 20)))
-            .thenReturn(new PageImpl<>(Collections.singletonList(boxitem), PageRequest.of(0, 1), 1));
-        // Search the boxitem
-        restBoxitemMockMvc.perform(get("/api/_search/boxitems?query=id:" + boxitem.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(boxitem.getId().intValue())))
-            .andExpect(jsonPath("$.[*].toRepair").value(hasItem(DEFAULT_TO_REPAIR.booleanValue())))
-            .andExpect(jsonPath("$.[*].comment").value(hasItem(DEFAULT_COMMENT)));
     }
 
     @Test

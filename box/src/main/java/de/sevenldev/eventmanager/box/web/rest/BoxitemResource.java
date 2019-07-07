@@ -2,7 +2,6 @@ package de.sevenldev.eventmanager.box.web.rest;
 
 import de.sevenldev.eventmanager.box.domain.Boxitem;
 import de.sevenldev.eventmanager.box.repository.BoxitemRepository;
-import de.sevenldev.eventmanager.box.repository.search.BoxitemSearchRepository;
 import de.sevenldev.eventmanager.box.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -25,10 +24,6 @@ import java.net.URISyntaxException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing {@link de.sevenldev.eventmanager.box.domain.Boxitem}.
@@ -46,11 +41,8 @@ public class BoxitemResource {
 
     private final BoxitemRepository boxitemRepository;
 
-    private final BoxitemSearchRepository boxitemSearchRepository;
-
-    public BoxitemResource(BoxitemRepository boxitemRepository, BoxitemSearchRepository boxitemSearchRepository) {
+    public BoxitemResource(BoxitemRepository boxitemRepository) {
         this.boxitemRepository = boxitemRepository;
-        this.boxitemSearchRepository = boxitemSearchRepository;
     }
 
     /**
@@ -67,7 +59,6 @@ public class BoxitemResource {
             throw new BadRequestAlertException("A new boxitem cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Boxitem result = boxitemRepository.save(boxitem);
-        boxitemSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/boxitems/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -89,7 +80,6 @@ public class BoxitemResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Boxitem result = boxitemRepository.save(boxitem);
-        boxitemSearchRepository.save(result);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, boxitem.getId().toString()))
             .body(result);
@@ -134,26 +124,6 @@ public class BoxitemResource {
     public ResponseEntity<Void> deleteBoxitem(@PathVariable Long id) {
         log.debug("REST request to delete Boxitem : {}", id);
         boxitemRepository.deleteById(id);
-        boxitemSearchRepository.deleteById(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
-
-    /**
-     * {@code SEARCH  /_search/boxitems?query=:query} : search for the boxitem corresponding
-     * to the query.
-     *
-     * @param query the query of the boxitem search.
-     * @param pageable the pagination information.
-     * @param queryParams a {@link MultiValueMap} query parameters.
-     * @param uriBuilder a {@link UriComponentsBuilder} URI builder.
-     * @return the result of the search.
-     */
-    @GetMapping("/_search/boxitems")
-    public ResponseEntity<List<Boxitem>> searchBoxitems(@RequestParam String query, Pageable pageable, @RequestParam MultiValueMap<String, String> queryParams, UriComponentsBuilder uriBuilder) {
-        log.debug("REST request to search for a page of Boxitems for query {}", query);
-        Page<Boxitem> page = boxitemSearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(uriBuilder.queryParams(queryParams), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
-    }
-
 }

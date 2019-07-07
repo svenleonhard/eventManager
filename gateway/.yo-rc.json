@@ -2,7 +2,8 @@
   "generator-jhipster": {
     "promptValues": {
       "packageName": "de.sevenldev.eventmanager.gateway",
-      "nativeLanguage": "en"
+      "nativeLanguage": "en",
+      "microservicePath": "../box"
     },
     "jhipsterVersion": "6.1.2",
     "applicationType": "gateway",
@@ -17,29 +18,24 @@
     "databaseType": "sql",
     "devDatabaseType": "h2Disk",
     "prodDatabaseType": "mysql",
-    "searchEngine": "elasticsearch",
+    "searchEngine": false,
     "messageBroker": false,
     "serviceDiscoveryType": "eureka",
     "buildTool": "maven",
     "enableSwaggerCodegen": false,
-    "jwtSecretKey": "ZDNjN2MyNjRlYjYxMjc3OTUwNzUxODBiYmY2ZjgxZjBlYmFmZGM1OGVhMzdjMDI0ZTlkYmM2MWVjZGI2ZjM4MTcwZWE1ZjdiZDFkZGY0N2U2OGZkOWM5ZGVmYTAxZmU5NzcxYjRhYzI4MWFkYWU1YzdmZmQ2MzcxNDZlMzU2ZmY=",
+    "jwtSecretKey": "Njg0MDAxNjQ1OGRjNjRkOTY5ODY5MWYwYjM5NjM3MzU5OTVlNGM3MWQ4YTA0Mzc5ZDAwNGI4MWI5MWVkYzBhMWVjYzUwZDEwMGRhODU1ZDkyNGY2YjczNTU1ZTI5OGVkNzUxOTQwNTA1ZWViZjZjNmU3MTM1M2Q4MzVkZDUyZDM=",
     "useSass": true,
     "clientPackageManager": "npm",
     "clientFramework": "angularX",
     "clientTheme": "flatly",
     "clientThemeVariant": "light",
-    "testFrameworks": [
-      "cucumber"
-    ],
+    "testFrameworks": ["cucumber"],
     "jhiPrefix": "jhi",
     "entitySuffix": "",
     "dtoSuffix": "DTO",
     "otherModules": [],
     "enableTranslation": true,
     "nativeLanguage": "en",
-    "languages": [
-      "en",
-      "de"
-    ]
+    "languages": ["en", "de"]
   }
 }

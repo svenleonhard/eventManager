@@ -1,0 +1,29 @@
+{
+  "gatewayApp": {
+    "boxItem": {
+      "home": {
+        "title": "Items",
+        "createLabel": "Item erstellen",
+        "createOrEditLabel": "Item erstellen oder bearbeiten",
+        "notFound": "No Item found"
+      },
+      "delete": {
+        "question": "Soll Item {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Item"
+      },
+      "name": "Name",
+      "category": "Category",
+      "description": "Description",
+      "manufactor": "Manufactor"
+    }
+  },
+  "boxApp": {
+    "boxItem": {
+      "created": "Item erstellt mit ID {{ param }}",
+      "updated": "Item aktualisiert mit ID {{ param }}",
+      "deleted": "Item gelöscht mit ID {{ param }}"
+    }
+  }
+}

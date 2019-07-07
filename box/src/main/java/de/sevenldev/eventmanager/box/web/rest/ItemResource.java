@@ -2,7 +2,6 @@ package de.sevenldev.eventmanager.box.web.rest;
 
 import de.sevenldev.eventmanager.box.domain.Item;
 import de.sevenldev.eventmanager.box.repository.ItemRepository;
-import de.sevenldev.eventmanager.box.repository.search.ItemSearchRepository;
 import de.sevenldev.eventmanager.box.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -26,10 +25,6 @@ import java.net.URISyntaxException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing {@link de.sevenldev.eventmanager.box.domain.Item}.
@@ -47,11 +42,8 @@ public class ItemResource {
 
     private final ItemRepository itemRepository;
 
-    private final ItemSearchRepository itemSearchRepository;
-
-    public ItemResource(ItemRepository itemRepository, ItemSearchRepository itemSearchRepository) {
+    public ItemResource(ItemRepository itemRepository) {
         this.itemRepository = itemRepository;
-        this.itemSearchRepository = itemSearchRepository;
     }
 
     /**
@@ -68,7 +60,6 @@ public class ItemResource {
             throw new BadRequestAlertException("A new item cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Item result = itemRepository.save(item);
-        itemSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/items/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -90,7 +81,6 @@ public class ItemResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Item result = itemRepository.save(item);
-        itemSearchRepository.save(result);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, item.getId().toString()))
             .body(result);
@@ -135,26 +125,6 @@ public class ItemResource {
     public ResponseEntity<Void> deleteItem(@PathVariable Long id) {
         log.debug("REST request to delete Item : {}", id);
         itemRepository.deleteById(id);
-        itemSearchRepository.deleteById(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
-
-    /**
-     * {@code SEARCH  /_search/items?query=:query} : search for the item corresponding
-     * to the query.
-     *
-     * @param query the query of the item search.
-     * @param pageable the pagination information.
-     * @param queryParams a {@link MultiValueMap} query parameters.
-     * @param uriBuilder a {@link UriComponentsBuilder} URI builder.
-     * @return the result of the search.
-     */
-    @GetMapping("/_search/items")
-    public ResponseEntity<List<Item>> searchItems(@RequestParam String query, Pageable pageable, @RequestParam MultiValueMap<String, String> queryParams, UriComponentsBuilder uriBuilder) {
-        log.debug("REST request to search for a page of Items for query {}", query);
-        Page<Item> page = itemSearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(uriBuilder.queryParams(queryParams), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
-    }
-
 }
