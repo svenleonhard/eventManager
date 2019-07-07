@@ -1,0 +1,40 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "de.sevenldev.eventmanager.gateway",
+      "nativeLanguage": "en"
+    },
+    "jhipsterVersion": "6.1.2",
+    "applicationType": "gateway",
+    "baseName": "gateway",
+    "packageName": "de.sevenldev.eventmanager.gateway",
+    "packageFolder": "de/sevenldev/eventmanager/gateway",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "hazelcast",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Disk",
+    "prodDatabaseType": "mysql",
+    "searchEngine": "elasticsearch",
+    "messageBroker": false,
+    "serviceDiscoveryType": "eureka",
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "NzY5MjBjZTNlNDhkMGJhNjg5ZDVjYmVhZjdiODg0MDFmMzQyZDE5NjUyYzMzY2E2YzNkMGQyZmJlZjc5Y2RmMGFiNGVmOTQ3M2MxNzMzYzQ1NzMxOTVhYWNmMTI4ZDhkY2VhNDgzODRiYmQ1NmRiMTdhYmZjODZiNGJlMzJjOTU=",
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "angularX",
+    "clientTheme": "flatly",
+    "clientThemeVariant": "light",
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": true,
+    "nativeLanguage": "en",
+    "languages": ["en", "de"]
+  }
+}
