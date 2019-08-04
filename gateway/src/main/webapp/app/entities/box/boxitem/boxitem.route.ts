@@ -57,7 +57,7 @@ export const boxitemRoute: Routes = [
       boxitem: BoxitemResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_MANAGER'],
       pageTitle: 'gatewayApp.boxBoxitem.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -69,7 +69,7 @@ export const boxitemRoute: Routes = [
       boxitem: BoxitemResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_MANAGER'],
       pageTitle: 'gatewayApp.boxBoxitem.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -84,7 +84,7 @@ export const boxitemPopupRoute: Routes = [
       boxitem: BoxitemResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_MANAGER'],
       pageTitle: 'gatewayApp.boxBoxitem.home.title'
     },
     canActivate: [UserRouteAccessService],
