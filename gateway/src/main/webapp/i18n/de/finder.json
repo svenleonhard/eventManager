@@ -1,0 +1,9 @@
+{
+  "finder": {
+    "title": "Suchfunktion",
+    "messages": {
+      "scannedID": "Gescannte ID:  {{id}}",
+      "noIDSelected": "Keine ID gescannt"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "finder": {
+    "title": "Finder",
+    "messages": {
+      "scannedID": "Scanned ID:  {{id}}",
+      "noIDSelected": "No ID scanned"
+    }
+  }
+}

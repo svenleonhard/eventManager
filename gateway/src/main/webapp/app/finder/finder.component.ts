@@ -7,9 +7,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FinderComponent implements OnInit {
 
+ qrResultString: string;
+
   constructor() { }
 
   ngOnInit() {
   }
+
+  onCodeResult(resultString) {
+    console.log(resultString);
+    this.qrResultString = resultString;
+  }
+
+  /*clearResult(): void {
+    this.qrResultString = null;
+  }*/
 
 }
