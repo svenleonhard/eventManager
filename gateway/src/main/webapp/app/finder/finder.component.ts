@@ -15,19 +15,14 @@ export class FinderComponent implements OnInit {
   itemsPerPage: number;
   boxitems: any;
   page: any;
+  boxName: string;
 
   constructor(protected boxitemService: BoxitemService) {
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.page = 0;
-    this.boxitems = [
-      {
-        item: {
-          description: 'Test Item'
-        },
-        toRepair: true
-      }
-    ];
+    this.boxitems = [];
     this.idInput = '';
+    this.boxName = '';
   }
 
   ngOnInit() {}
@@ -37,10 +32,10 @@ export class FinderComponent implements OnInit {
       .query({
         'boxId.equals': resultString
       })
-      .subscribe((res: HttpResponse<IBoxitem[]>) => console.log(res.body), (res: HttpErrorResponse) => console.log(res.message));
+      .subscribe((res: HttpResponse<IBoxitem[]>) => (this.boxitems = res.body), (res: HttpErrorResponse) => console.log(res.message));
 
-    console.log(this.boxitemService.find(resultString));
     this.qrResultString = resultString;
+    this.idInput = resultString;
   }
 
   onIdSubmit() {
@@ -49,7 +44,15 @@ export class FinderComponent implements OnInit {
       .query({
         'boxId.equals': this.idInput
       })
-      .subscribe((res: HttpResponse<IBoxitem[]>) => (this.boxitems = res.body), (res: HttpErrorResponse) => console.log(res.message));
+      .subscribe(
+        (res: HttpResponse<IBoxitem[]>) => {
+          this.boxitems = res.body;
+          if (this.boxitems[0]) {
+            this.boxName = this.boxitems[0].box.name;
+          }
+        },
+        (res: HttpErrorResponse) => console.log(res.message)
+      );
   }
 
   /*clearResult(): void {
