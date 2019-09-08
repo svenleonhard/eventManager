@@ -1,8 +1,10 @@
 package de.sevenldev.eventmanager.box.web.rest;
 
 import de.sevenldev.eventmanager.box.domain.Boxitem;
-import de.sevenldev.eventmanager.box.repository.BoxitemRepository;
+import de.sevenldev.eventmanager.box.service.BoxitemService;
 import de.sevenldev.eventmanager.box.web.rest.errors.BadRequestAlertException;
+import de.sevenldev.eventmanager.box.service.dto.BoxitemCriteria;
+import de.sevenldev.eventmanager.box.service.BoxitemQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -14,8 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,10 +40,13 @@ public class BoxitemResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final BoxitemRepository boxitemRepository;
+    private final BoxitemService boxitemService;
 
-    public BoxitemResource(BoxitemRepository boxitemRepository) {
-        this.boxitemRepository = boxitemRepository;
+    private final BoxitemQueryService boxitemQueryService;
+
+    public BoxitemResource(BoxitemService boxitemService, BoxitemQueryService boxitemQueryService) {
+        this.boxitemService = boxitemService;
+        this.boxitemQueryService = boxitemQueryService;
     }
 
     /**
@@ -58,7 +62,7 @@ public class BoxitemResource {
         if (boxitem.getId() != null) {
             throw new BadRequestAlertException("A new boxitem cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Boxitem result = boxitemRepository.save(boxitem);
+        Boxitem result = boxitemService.save(boxitem);
         return ResponseEntity.created(new URI("/api/boxitems/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -79,7 +83,7 @@ public class BoxitemResource {
         if (boxitem.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Boxitem result = boxitemRepository.save(boxitem);
+        Boxitem result = boxitemService.save(boxitem);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, boxitem.getId().toString()))
             .body(result);
@@ -88,17 +92,30 @@ public class BoxitemResource {
     /**
      * {@code GET  /boxitems} : get all the boxitems.
      *
+
      * @param pageable the pagination information.
-     * @param queryParams a {@link MultiValueMap} query parameters.
-     * @param uriBuilder a {@link UriComponentsBuilder} URI builder.
+
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of boxitems in body.
      */
     @GetMapping("/boxitems")
-    public ResponseEntity<List<Boxitem>> getAllBoxitems(Pageable pageable, @RequestParam MultiValueMap<String, String> queryParams, UriComponentsBuilder uriBuilder) {
-        log.debug("REST request to get a page of Boxitems");
-        Page<Boxitem> page = boxitemRepository.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(uriBuilder.queryParams(queryParams), page);
+    public ResponseEntity<List<Boxitem>> getAllBoxitems(BoxitemCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get Boxitems by criteria: {}", criteria);
+        Page<Boxitem> page = boxitemQueryService.findByCriteria(criteria, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+    * {@code GET  /boxitems/count} : count all the boxitems.
+    *
+    * @param criteria the criteria which the requested entities should match.
+    * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+    */
+    @GetMapping("/boxitems/count")
+    public ResponseEntity<Long> countBoxitems(BoxitemCriteria criteria) {
+        log.debug("REST request to count Boxitems by criteria: {}", criteria);
+        return ResponseEntity.ok().body(boxitemQueryService.countByCriteria(criteria));
     }
 
     /**
@@ -110,7 +127,7 @@ public class BoxitemResource {
     @GetMapping("/boxitems/{id}")
     public ResponseEntity<Boxitem> getBoxitem(@PathVariable Long id) {
         log.debug("REST request to get Boxitem : {}", id);
-        Optional<Boxitem> boxitem = boxitemRepository.findById(id);
+        Optional<Boxitem> boxitem = boxitemService.findOne(id);
         return ResponseUtil.wrapOrNotFound(boxitem);
     }
 
@@ -123,7 +140,7 @@ public class BoxitemResource {
     @DeleteMapping("/boxitems/{id}")
     public ResponseEntity<Void> deleteBoxitem(@PathVariable Long id) {
         log.debug("REST request to delete Boxitem : {}", id);
-        boxitemRepository.deleteById(id);
+        boxitemService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
 }

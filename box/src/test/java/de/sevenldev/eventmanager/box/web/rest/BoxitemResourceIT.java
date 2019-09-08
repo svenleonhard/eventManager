@@ -2,8 +2,13 @@ package de.sevenldev.eventmanager.box.web.rest;
 
 import de.sevenldev.eventmanager.box.BoxApp;
 import de.sevenldev.eventmanager.box.domain.Boxitem;
+import de.sevenldev.eventmanager.box.domain.Box;
+import de.sevenldev.eventmanager.box.domain.Item;
 import de.sevenldev.eventmanager.box.repository.BoxitemRepository;
+import de.sevenldev.eventmanager.box.service.BoxitemService;
 import de.sevenldev.eventmanager.box.web.rest.errors.ExceptionTranslator;
+import de.sevenldev.eventmanager.box.service.dto.BoxitemCriteria;
+import de.sevenldev.eventmanager.box.service.BoxitemQueryService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +33,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * Integration tests for the {@Link BoxitemResource} REST controller.
+ * Integration tests for the {@link BoxitemResource} REST controller.
  */
 @SpringBootTest(classes = BoxApp.class)
 public class BoxitemResourceIT {
@@ -41,6 +46,12 @@ public class BoxitemResourceIT {
 
     @Autowired
     private BoxitemRepository boxitemRepository;
+
+    @Autowired
+    private BoxitemService boxitemService;
+
+    @Autowired
+    private BoxitemQueryService boxitemQueryService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -64,7 +75,7 @@ public class BoxitemResourceIT {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final BoxitemResource boxitemResource = new BoxitemResource(boxitemRepository);
+        final BoxitemResource boxitemResource = new BoxitemResource(boxitemService, boxitemQueryService);
         this.restBoxitemMockMvc = MockMvcBuilders.standaloneSetup(boxitemResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -174,6 +185,159 @@ public class BoxitemResourceIT {
 
     @Test
     @Transactional
+    public void getAllBoxitemsByToRepairIsEqualToSomething() throws Exception {
+        // Initialize the database
+        boxitemRepository.saveAndFlush(boxitem);
+
+        // Get all the boxitemList where toRepair equals to DEFAULT_TO_REPAIR
+        defaultBoxitemShouldBeFound("toRepair.equals=" + DEFAULT_TO_REPAIR);
+
+        // Get all the boxitemList where toRepair equals to UPDATED_TO_REPAIR
+        defaultBoxitemShouldNotBeFound("toRepair.equals=" + UPDATED_TO_REPAIR);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBoxitemsByToRepairIsInShouldWork() throws Exception {
+        // Initialize the database
+        boxitemRepository.saveAndFlush(boxitem);
+
+        // Get all the boxitemList where toRepair in DEFAULT_TO_REPAIR or UPDATED_TO_REPAIR
+        defaultBoxitemShouldBeFound("toRepair.in=" + DEFAULT_TO_REPAIR + "," + UPDATED_TO_REPAIR);
+
+        // Get all the boxitemList where toRepair equals to UPDATED_TO_REPAIR
+        defaultBoxitemShouldNotBeFound("toRepair.in=" + UPDATED_TO_REPAIR);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBoxitemsByToRepairIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        boxitemRepository.saveAndFlush(boxitem);
+
+        // Get all the boxitemList where toRepair is not null
+        defaultBoxitemShouldBeFound("toRepair.specified=true");
+
+        // Get all the boxitemList where toRepair is null
+        defaultBoxitemShouldNotBeFound("toRepair.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllBoxitemsByCommentIsEqualToSomething() throws Exception {
+        // Initialize the database
+        boxitemRepository.saveAndFlush(boxitem);
+
+        // Get all the boxitemList where comment equals to DEFAULT_COMMENT
+        defaultBoxitemShouldBeFound("comment.equals=" + DEFAULT_COMMENT);
+
+        // Get all the boxitemList where comment equals to UPDATED_COMMENT
+        defaultBoxitemShouldNotBeFound("comment.equals=" + UPDATED_COMMENT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBoxitemsByCommentIsInShouldWork() throws Exception {
+        // Initialize the database
+        boxitemRepository.saveAndFlush(boxitem);
+
+        // Get all the boxitemList where comment in DEFAULT_COMMENT or UPDATED_COMMENT
+        defaultBoxitemShouldBeFound("comment.in=" + DEFAULT_COMMENT + "," + UPDATED_COMMENT);
+
+        // Get all the boxitemList where comment equals to UPDATED_COMMENT
+        defaultBoxitemShouldNotBeFound("comment.in=" + UPDATED_COMMENT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBoxitemsByCommentIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        boxitemRepository.saveAndFlush(boxitem);
+
+        // Get all the boxitemList where comment is not null
+        defaultBoxitemShouldBeFound("comment.specified=true");
+
+        // Get all the boxitemList where comment is null
+        defaultBoxitemShouldNotBeFound("comment.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllBoxitemsByBoxIsEqualToSomething() throws Exception {
+        // Initialize the database
+        boxitemRepository.saveAndFlush(boxitem);
+        Box box = BoxResourceIT.createEntity(em);
+        em.persist(box);
+        em.flush();
+        boxitem.setBox(box);
+        boxitemRepository.saveAndFlush(boxitem);
+        Long boxId = box.getId();
+
+        // Get all the boxitemList where box equals to boxId
+        defaultBoxitemShouldBeFound("boxId.equals=" + boxId);
+
+        // Get all the boxitemList where box equals to boxId + 1
+        defaultBoxitemShouldNotBeFound("boxId.equals=" + (boxId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllBoxitemsByItemIsEqualToSomething() throws Exception {
+        // Initialize the database
+        boxitemRepository.saveAndFlush(boxitem);
+        Item item = ItemResourceIT.createEntity(em);
+        em.persist(item);
+        em.flush();
+        boxitem.setItem(item);
+        boxitemRepository.saveAndFlush(boxitem);
+        Long itemId = item.getId();
+
+        // Get all the boxitemList where item equals to itemId
+        defaultBoxitemShouldBeFound("itemId.equals=" + itemId);
+
+        // Get all the boxitemList where item equals to itemId + 1
+        defaultBoxitemShouldNotBeFound("itemId.equals=" + (itemId + 1));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned.
+     */
+    private void defaultBoxitemShouldBeFound(String filter) throws Exception {
+        restBoxitemMockMvc.perform(get("/api/boxitems?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(boxitem.getId().intValue())))
+            .andExpect(jsonPath("$.[*].toRepair").value(hasItem(DEFAULT_TO_REPAIR.booleanValue())))
+            .andExpect(jsonPath("$.[*].comment").value(hasItem(DEFAULT_COMMENT)));
+
+        // Check, that the count call also returns 1
+        restBoxitemMockMvc.perform(get("/api/boxitems/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned.
+     */
+    private void defaultBoxitemShouldNotBeFound(String filter) throws Exception {
+        restBoxitemMockMvc.perform(get("/api/boxitems?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restBoxitemMockMvc.perform(get("/api/boxitems/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().string("0"));
+    }
+
+
+    @Test
+    @Transactional
     public void getNonExistingBoxitem() throws Exception {
         // Get the boxitem
         restBoxitemMockMvc.perform(get("/api/boxitems/{id}", Long.MAX_VALUE))
@@ -184,7 +348,7 @@ public class BoxitemResourceIT {
     @Transactional
     public void updateBoxitem() throws Exception {
         // Initialize the database
-        boxitemRepository.saveAndFlush(boxitem);
+        boxitemService.save(boxitem);
 
         int databaseSizeBeforeUpdate = boxitemRepository.findAll().size();
 
@@ -231,7 +395,7 @@ public class BoxitemResourceIT {
     @Transactional
     public void deleteBoxitem() throws Exception {
         // Initialize the database
-        boxitemRepository.saveAndFlush(boxitem);
+        boxitemService.save(boxitem);
 
         int databaseSizeBeforeDelete = boxitemRepository.findAll().size();
 

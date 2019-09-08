@@ -1,6 +1,7 @@
 {
   "finder": {
     "title": "Finder",
+    "selectId": "Select Box ID manually",
     "messages": {
       "scannedID": "Scanned ID:  {{id}}",
       "noIDSelected": "No ID scanned"

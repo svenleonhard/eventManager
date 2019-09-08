@@ -14,6 +14,29 @@
             <span jhiTranslate="finder.messages.noIDSelected">No ID selected </span>
         </div>
 
-    </div>
+        <div>
+            <div class="form-group">
+                <label class="form-control-label" jhiTranslate="finder.selectId"
+                       for="field_id">Comment</label>
+                <input type="text" class="form-control" name="boxitem_" id="field_id"
+                       [value]="idInput"/>
+                <div class="mt-2">
+                    <button
+                        (click)="onIdSubmit()"
+                        class="btn btn-info btn-sm">
+                        <fa-icon [icon]="'eye'"></fa-icon>
+                        <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <h3 class="display-8">Item List</h3>
 
+        <div>
+            <ul class="list-group">
+                <li class="list-group-item" *ngFor="let boxitem of boxitems" [ngClass]="{'list-group-item-danger': boxitem.toRepair}">{{ boxitem.item.description }}</li>
+            </ul>
+        </div>
+
+    </div>
 </div>
