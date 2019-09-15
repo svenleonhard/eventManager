@@ -1,0 +1,48 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-material-list-item-heading" jhiTranslate="gatewayApp.boxMaterialListItem.home.createOrEditLabel">Create or edit a Material List Item</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!editForm.get('id').value">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gatewayApp.boxMaterialListItem.checkedIn" for="field_checkedIn">Checked In</label>
+                    <input type="checkbox" class="form-control" name="checkedIn" id="field_checkedIn"
+                           formControlName="checkedIn"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gatewayApp.boxMaterialListItem.comment" for="field_comment">Comment</label>
+                    <input type="text" class="form-control" name="comment" id="field_comment"
+                           formControlName="comment"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gatewayApp.boxMaterialListItem.materialList" for="field_materialList">Material List</label>
+                    <select class="form-control" id="field_materialList" name="materialList" formControlName="materialList">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="materialListOption.id === editForm.get('materialList').value?.id ? editForm.get('materialList').value : materialListOption" *ngFor="let materialListOption of materiallists; trackBy: trackMaterialListById">{{materialListOption.name}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gatewayApp.boxMaterialListItem.boxitem" for="field_boxitem">Boxitem</label>
+                    <select class="form-control" id="field_boxitem" name="boxitem" formControlName="boxitem">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="boxitemOption.id === editForm.get('boxitem').value?.id ? editForm.get('boxitem').value : boxitemOption" *ngFor="let boxitemOption of boxitems; trackBy: trackBoxitemById">{{boxitemOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

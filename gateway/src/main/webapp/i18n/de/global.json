@@ -11,6 +11,8 @@
         "boxBox": "Box",
         "boxItem": "Item",
         "boxBoxitem": "Boxitem",
+        "boxMaterialList": "Material List",
+        "boxMaterialListItem": "Material List Item",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

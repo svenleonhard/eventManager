@@ -24,7 +24,7 @@
         }
     ],
     "relationships": [],
-    "changelogDate": "20190707171112",
+    "changelogDate": "20190915203536",
     "entityTableName": "item",
     "dto": "no",
     "pagination": "infinite-scroll",

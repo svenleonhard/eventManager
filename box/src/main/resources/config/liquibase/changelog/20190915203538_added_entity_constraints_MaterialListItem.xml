@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <!--
+        Added the constraints for entity MaterialListItem.
+    -->
+    <changeSet id="20190915203538-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="material_list_id"
+                                 baseTableName="material_list_item"
+                                 constraintName="fk_material_list_item_material_list_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="material_list"/>
+
+        <addForeignKeyConstraint baseColumnNames="boxitem_id"
+                                 baseTableName="material_list_item"
+                                 constraintName="fk_material_list_item_boxitem_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="boxitem"/>
+
+    </changeSet>
+</databaseChangeLog>

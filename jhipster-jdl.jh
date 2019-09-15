@@ -12,6 +12,19 @@ description String,
 manufactor String
 }
 
+entity MaterialList{
+name String required minlength(3),
+eventStart Integer,
+eventEnd Integer,
+location String,
+open Boolean
+}
+
+entity MaterialListItem{
+checkedIn Boolean,
+comment String
+}
+
 entity Boxitem{
 toRepair Boolean,
 comment String
@@ -19,7 +32,9 @@ comment String
 
 relationship ManyToOne {
 	Boxitem{box(name)} to Box,
-    Boxitem{item(name)} to Item
+    Boxitem{item(name)} to Item,
+    MaterialListItem{materialList(name)} to MaterialList,
+    MaterialListItem to Boxitem   
 }
 
-paginate Box, Item, Boxitem with infinite-scroll
+paginate Box, Item, Boxitem, MaterialListItem, MaterialList with infinite-scroll

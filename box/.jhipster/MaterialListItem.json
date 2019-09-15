@@ -1,0 +1,39 @@
+{
+    "name": "MaterialListItem",
+    "fields": [
+        {
+            "fieldName": "checkedIn",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "comment",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "materialList",
+            "otherEntityRelationshipName": "materialListItem",
+            "relationshipName": "materialList",
+            "otherEntityField": "name"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "boxitem",
+            "otherEntityRelationshipName": "materialListItem",
+            "relationshipName": "boxitem",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190915203538",
+    "entityTableName": "material_list_item",
+    "dto": "no",
+    "pagination": "infinite-scroll",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "box",
+    "applications": "*",
+    "microserviceName": "box"
+}

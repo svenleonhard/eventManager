@@ -1,0 +1,29 @@
+{
+  "gatewayApp": {
+    "boxMaterialListItem": {
+      "home": {
+        "title": "Material List Items",
+        "createLabel": "Material List Item erstellen",
+        "createOrEditLabel": "Material List Item erstellen oder bearbeiten",
+        "notFound": "No Material List Items found"
+      },
+      "delete": {
+        "question": "Soll Material List Item {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Material List Item"
+      },
+      "checkedIn": "Checked In",
+      "comment": "Comment",
+      "materialList": "Material List",
+      "boxitem": "Boxitem"
+    }
+  },
+  "boxApp": {
+    "boxMaterialListItem": {
+      "created": "Material List Item erstellt mit ID {{ param }}",
+      "updated": "Material List Item aktualisiert mit ID {{ param }}",
+      "deleted": "Material List Item gelöscht mit ID {{ param }}"
+    }
+  }
+}

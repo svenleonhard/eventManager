@@ -1,10 +1,6 @@
 {
-    "name": "Box",
+    "name": "MaterialList",
     "fields": [
-        {
-            "fieldName": "extenedId",
-            "fieldType": "String"
-        },
         {
             "fieldName": "name",
             "fieldType": "String",
@@ -15,17 +11,25 @@
             "fieldValidateRulesMinlength": 3
         },
         {
-            "fieldName": "category",
+            "fieldName": "eventStart",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "eventEnd",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "location",
             "fieldType": "String"
         },
         {
-            "fieldName": "description",
-            "fieldType": "String"
+            "fieldName": "open",
+            "fieldType": "Boolean"
         }
     ],
     "relationships": [],
-    "changelogDate": "20190915203535",
-    "entityTableName": "box",
+    "changelogDate": "20190915203537",
+    "entityTableName": "material_list",
     "dto": "no",
     "pagination": "infinite-scroll",
     "service": "no",

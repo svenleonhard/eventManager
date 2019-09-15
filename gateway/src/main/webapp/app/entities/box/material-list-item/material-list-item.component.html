@@ -1,0 +1,71 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="gatewayApp.boxMaterialListItem.home.title">Material List Items</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-material-list-item" [routerLink]="['/material-list-item/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span  jhiTranslate="gatewayApp.boxMaterialListItem.home.createLabel">
+            Create a new Material List Item
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="alert alert-warning" *ngIf="materialListItems?.length === 0">
+        <span jhiTranslate="gatewayApp.boxMaterialListItem.home.notFound">No materialListItems found</span>
+    </div>
+    <div class="table-responsive" *ngIf="materialListItems?.length > 0">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
+            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="checkedIn"><span jhiTranslate="gatewayApp.boxMaterialListItem.checkedIn">Checked In</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="comment"><span jhiTranslate="gatewayApp.boxMaterialListItem.comment">Comment</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="materialList.name"><span jhiTranslate="gatewayApp.boxMaterialListItem.materialList">Material List</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="boxitem.id"><span jhiTranslate="gatewayApp.boxMaterialListItem.boxitem">Boxitem</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
+            <tr *ngFor="let materialListItem of materialListItems ;trackBy: trackId">
+                <td><a [routerLink]="['/material-list-item', materialListItem.id, 'view' ]">{{materialListItem.id}}</a></td>
+                <td>{{materialListItem.checkedIn}}</td>
+                <td>{{materialListItem.comment}}</td>
+                <td>
+                    <div *ngIf="materialListItem.materialList">
+                        <a [routerLink]="['/material-list', materialListItem.materialList?.id, 'view' ]" >{{materialListItem.materialList?.name}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="materialListItem.boxitem">
+                        <a [routerLink]="['/boxitem', materialListItem.boxitem?.id, 'view' ]" >{{materialListItem.boxitem?.id}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <button type="submit"
+                                [routerLink]="['/material-list-item', materialListItem.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/material-list-item', materialListItem.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/material-list-item', { outlets: { popup: materialListItem.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

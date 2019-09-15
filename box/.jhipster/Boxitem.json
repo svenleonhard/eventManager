@@ -24,14 +24,20 @@
             "otherEntityRelationshipName": "boxitem",
             "relationshipName": "item",
             "otherEntityField": "name"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "materialListItem",
+            "otherEntityRelationshipName": "boxitem",
+            "relationshipName": "materialListItem"
         }
     ],
-    "changelogDate": "20190707171113",
+    "changelogDate": "20190915203539",
     "entityTableName": "boxitem",
     "dto": "no",
     "pagination": "infinite-scroll",
-    "service": "serviceImpl",
-    "jpaMetamodelFiltering": true,
+    "service": "no",
+    "jpaMetamodelFiltering": false,
     "fluentMethods": true,
     "clientRootFolder": "box",
     "applications": "*",

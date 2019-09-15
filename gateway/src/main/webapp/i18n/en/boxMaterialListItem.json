@@ -1,0 +1,29 @@
+{
+  "gatewayApp": {
+    "boxMaterialListItem": {
+      "home": {
+        "title": "Material List Items",
+        "createLabel": "Create a new Material List Item",
+        "createOrEditLabel": "Create or edit a Material List Item",
+        "notFound": "No Material List Items found"
+      },
+      "delete": {
+        "question": "Are you sure you want to delete Material List Item {{ id }}?"
+      },
+      "detail": {
+        "title": "Material List Item"
+      },
+      "checkedIn": "Checked In",
+      "comment": "Comment",
+      "materialList": "Material List",
+      "boxitem": "Boxitem"
+    }
+  },
+  "boxApp": {
+    "boxMaterialListItem": {
+      "created": "A new Material List Item is created with identifier {{ param }}",
+      "updated": "A Material List Item is updated with identifier {{ param }}",
+      "deleted": "A Material List Item is deleted with identifier {{ param }}"
+    }
+  }
+}

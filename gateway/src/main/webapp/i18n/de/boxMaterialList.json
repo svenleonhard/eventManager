@@ -1,0 +1,30 @@
+{
+  "gatewayApp": {
+    "boxMaterialList": {
+      "home": {
+        "title": "Material Lists",
+        "createLabel": "Material List erstellen",
+        "createOrEditLabel": "Material List erstellen oder bearbeiten",
+        "notFound": "No Material Lists found"
+      },
+      "delete": {
+        "question": "Soll Material List {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Material List"
+      },
+      "name": "Name",
+      "eventStart": "Event Start",
+      "eventEnd": "Event End",
+      "location": "Location",
+      "open": "Open"
+    }
+  },
+  "boxApp": {
+    "boxMaterialList": {
+      "created": "Material List erstellt mit ID {{ param }}",
+      "updated": "Material List aktualisiert mit ID {{ param }}",
+      "deleted": "Material List gelöscht mit ID {{ param }}"
+    }
+  }
+}
