@@ -21,7 +21,8 @@ import * as moment from 'moment';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ActiveMenuDirective, ErrorComponent } from './layouts';
 import { FinderComponent } from './finder/finder.component';
-import {GatewayFinderModule} from "app/finder";
+import { GatewayFinderModule } from 'app/finder';
+import { GatewayEquipmentModule } from 'app/equipment';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import {GatewayFinderModule} from "app/finder";
     GatewayHomeModule,
     GatewayAccountModule,
     GatewayFinderModule,
+    GatewayEquipmentModule,
     // jhipster-needle-angular-add-module JHipster will add new module here
     GatewayEntityModule,
     GatewayAppRoutingModule
